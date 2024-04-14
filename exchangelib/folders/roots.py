@@ -178,14 +178,15 @@ class RootOfHierarchy(BaseFolder, metaclass=EWSMeta):
                     msg_folder_root = f
                 folders_map[f.id] = f
 
-            # Only retrieve folders within the visible hierarchy. Trying to fetch details of either TeamsChatHistory or
-            # TeamsMessageData, if present, will result in a "ErrorAccessDeniedException: Not allowed to access Non IPM
-            # folder." error from M365. Besides, we only need to process the user folders, not the system ones. [BCAS-2543]
-            if not msg_folder_root:
+            # When resolving the whole folder tree, only retrieve folders within the visible hierarchy. Trying to fetch
+            # details of either TeamsChatHistory or TeamsMessageData, if present, will result in a
+            # "ErrorAccessDeniedException: Not allowed to access Non IPM folder." error from M365. Besides, we only need
+            # to process the user folders, not the system ones. [BCAS-2543]
+            if isinstance(self, Root) and not msg_folder_root:
                 raise Exception("Could not find MsgFolderRoot")
 
             for f in (
-                SingleFolderQuerySet(account=self.account, folder=msg_folder_root).depth(self.DEFAULT_FOLDER_TRAVERSAL_DEPTH).all()
+                SingleFolderQuerySet(account=self.account, folder=msg_folder_root or self).depth(self.DEFAULT_FOLDER_TRAVERSAL_DEPTH).all()
             ):
                 if isinstance(f, ErrorAccessDenied):
                     # We may not have FindFolder access, or GetFolder access, either to this folder or at all
