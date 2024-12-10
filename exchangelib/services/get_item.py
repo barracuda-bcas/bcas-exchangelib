@@ -8,6 +8,14 @@ class GetItem(EWSAccountService):
 
     SERVICE_NAME = "GetItem"
     element_container_name = f"{{{MNS}}}Items"
+    on_created_hook = None
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if GetItem.on_created_hook:
+            GetItem.on_created_hook(self)
 
     def call(self, items, additional_fields, shape):
         """Return all items in an account that correspond to a list of ID's, in stable order.
