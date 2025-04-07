@@ -29,8 +29,6 @@ class RootOfHierarchy(BaseFolder, metaclass=EWSMeta):
     # 'RootOfHierarchy' subclasses must not be in this list.
     WELLKNOWN_FOLDERS = []
 
-    _subfolders_lock = Lock()
-
     # This folder type also has 'folder:PermissionSet' on some server versions, but requesting it sometimes causes
     # 'ErrorAccessDenied', as reported by some users. Ignore it entirely for root folders - it's usefulness is
     # deemed minimal at best.
@@ -38,12 +36,13 @@ class RootOfHierarchy(BaseFolder, metaclass=EWSMeta):
         field_uri="folder:EffectiveRights", is_read_only=True, supported_from=EXCHANGE_2007_SP1
     )
 
-    __slots__ = "_account", "_subfolders"
+    __slots__ = "_account", "_subfolders_lock", "_subfolders"
 
     # A special folder that acts as the top of a folder hierarchy. Finds and caches subfolders at arbitrary depth.
     def __init__(self, **kwargs):
         self._account = kwargs.pop("account", None)  # A pointer back to the account holding the folder hierarchy
         super().__init__(**kwargs)
+        self._subfolders_lock = Lock()
         self._subfolders = None  # See self._folders_map()
 
     @property
