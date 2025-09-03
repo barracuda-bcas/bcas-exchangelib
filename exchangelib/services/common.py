@@ -24,6 +24,7 @@ from ..errors import (
     ErrorMailRecipientNotFound,
     ErrorMessageSizeExceeded,
     ErrorMimeContentConversionFailed,
+    ErrorPropertyTooBig,
     ErrorRecurrenceHasNoOccurrence,
     ErrorServerBusy,
     ErrorTimeoutExpired,
@@ -94,6 +95,7 @@ class EWSService(metaclass=abc.ABCMeta):
         ErrorCorruptData,
         ErrorItemCorrupt,
         ErrorMailRecipientNotFound,
+        ErrorPropertyTooBig,
     )
     # Similarly, define the warnings we want to return unraised
     WARNINGS_TO_CATCH_IN_RESPONSE = ErrorBatchProcessingStopped
