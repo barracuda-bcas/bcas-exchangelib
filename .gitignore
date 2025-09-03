@@ -13,3 +13,5 @@ venv
 
 settings.yml
 scratch*.py
+
+.vscode/

@@ -1356,6 +1356,10 @@ class ErrorPhoneNumberNotDialable(ResponseMessageError):
     pass
 
 
+class ErrorPropertyTooBig(ResponseMessageError):
+    pass
+
+
 class ErrorPropertyUpdate(ResponseMessageError):
     pass
 
